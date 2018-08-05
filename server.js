@@ -75,6 +75,7 @@ function getMatchListBySummmonerName(name, count) {
                 let participant = match.participants[participantIdentity.participantId];
 
                 let matchObj = new Object();
+                matchObj['id'] = match.gameId;
                 matchObj['outcome'] = participant.stats.win?"Victory":"Defeat";
                 matchObj['gameLength'] = match.gameDuration;
                 matchObj['summonerName'] = participantIdentity.player.summonerName;
@@ -84,7 +85,7 @@ function getMatchListBySummmonerName(name, count) {
                 matchObj['items'] = getItemsName([participant.stats.item0, participant.stats.item1, participant.stats.item2, participant.stats.item3, participant.stats.item4, participant.stats.item5, participant.stats.item6]);
                 matchObj['championLevel'] = participant.stats.champLevel;
                 matchObj['totalCreepScore'] = participant.stats.totalMinionsKilled;
-                matchObj['CreepScorePerMin'] = participant.stats.totalMinionsKilled * 60.0 / match.gameDuration;
+                matchObj['creepScorePerMin'] = participant.stats.totalMinionsKilled * 60.0 / match.gameDuration;
 
                 matches.push(matchObj);
             }
