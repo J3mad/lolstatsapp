@@ -1,6 +1,41 @@
 import React, { Component } from 'react';
 import './App.css';
 
+class SummonerNameInput extends Component {
+  constructor(props) {
+      super(props);
+      this.state = { summonerName: ''};
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({summonerName: event.target.value});
+  }
+
+  handleSubmit(event) {
+    this.props.onMatchesFetched([]);
+
+    fetch('/' + this.state.summonerName)
+    .then(res => res.json())
+    .then(matches => this.props.onMatchesFetched(JSON.parse(matches)));
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          SummonerName:
+          <input type="text" name="name" onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Search" />
+      </form>
+    );
+  }
+}
+
 function MatchRow(props) {
   const match = props.match;
   return (
@@ -53,17 +88,19 @@ class App extends Component {
       this.state = {
           matches: []
       };
+
+      this.onMatchesFetched = this.onMatchesFetched.bind(this);
   }
 
-  componentDidMount() {
-    fetch('/3mad')
-    .then(res => res.json())
-    .then(matches => this.setState({matches: JSON.parse(matches)}));
+  onMatchesFetched(data) {
+    this.setState({matches: data});
   }
 
   render() {
     return (
       <div className="App">
+        <SummonerNameInput onMatchesFetched={this.onMatchesFetched}/>
+        <br />
         <MatchTable matches = {this.state.matches} />
       </div>
     );
